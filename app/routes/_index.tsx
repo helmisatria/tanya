@@ -31,7 +31,7 @@ export default function Index() {
           {isLoggedIn ? (
             <button
               onClick={() => setIsLoggedIn(false)}
-              className="font-bold text-slate-800 py-2.5 px-3.5 rounded-full border border-slate-400 w-10 h-10 flex items-center justify-center"
+              className="font-bold text-slate-800 py-2.5 px-3.5 rounded-full border border-slate-400 w-10 h-10 flex items-center justify-center bg-white"
             >
               H
             </button>
@@ -51,9 +51,11 @@ export default function Index() {
         <button>Buat pertanyaan baru</button>
 
         <ul className="space-y-5">
-          {new Array(10).fill(0).map((_, i) => (
-            <QuestionListItem key={i} />
-          ))}
+          {Array(10)
+            .fill(0)
+            .map((_, i) => (
+              <QuestionListItem key={i} />
+            ))}
         </ul>
       </main>
     </>
