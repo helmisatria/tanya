@@ -48,9 +48,17 @@ export default function Index() {
       </header>
 
       <main className="px-6 py-5">
-        <button>Buat pertanyaan baru</button>
+        <button
+          className="border font-semibold border-dashed leading-140% justify-center border-gray-400 shadow-sm rounded-lg py-5 w-full flex items-center"
+          style={{
+            background:
+              "linear-gradient(180deg, #F9FAFB 50.79%, rgba(249, 250, 251, 0) 100%);",
+          }}
+        >
+          Buat pertanyaan baru
+        </button>
 
-        <ul className="space-y-5">
+        <ul className="space-y-5 mt-5">
           {Array(10)
             .fill(0)
             .map((_, i) => (
