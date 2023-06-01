@@ -1,19 +1,11 @@
-import {
-  redirect,
-  type LinksFunction,
-  type LoaderArgs,
-} from "@remix-run/cloudflare";
+import { type LinksFunction, type LoaderArgs } from "@remix-run/cloudflare";
 
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
 
 import styles from "./tailwind.css";
+import { GoogleStrategy } from "remix-auth-google";
+import { authenticator } from "./services/auth.server";
+import invariant from "tiny-invariant";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,14 +21,32 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export async function loader({ request }: LoaderArgs) {
-  // const url = new URL(request.url);
+export async function loader({ request, context }: LoaderArgs) {
+  invariant(context.AUTH_GOOGLE_CLIENT_ID, "Missing AUTH_GOOGLE_CLIENT_ID");
+  invariant(context.AUTH_GOOGLE_CLIENT_SECRET, "Missing AUTH_GOOGLE_CLIENT_SECRET");
+  invariant(context.AUTH_GOOGLE_CALLBACK_URL, "Missing AUTH_GOOGLE_CALLBACK_URL");
 
-  // const isOnRootPath = url.pathname === "/";
+  let googleStrategy = new GoogleStrategy(
+    {
+      clientID: context.AUTH_GOOGLE_CLIENT_ID as string,
+      clientSecret: context.AUTH_GOOGLE_CLIENT_SECRET as string,
+      callbackURL: context.AUTH_GOOGLE_CALLBACK_URL as string,
+    },
+    async ({ accessToken, refreshToken, extraParams, profile }) => {
+      // Get the user data from your DB or API using the tokens and profile
+      console.log({ profile });
 
-  // if (isOnRootPath) {
-  //   return redirect("/tanya");
-  // }
+      return {
+        id: profile.id,
+        name: profile.displayName,
+        email: profile.emails[0].value,
+      };
+
+      // return User.findOrCreate({ email: profile.emails[0].value });
+    }
+  );
+
+  authenticator.use(googleStrategy);
 
   return {};
 }
