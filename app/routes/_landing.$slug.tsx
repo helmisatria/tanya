@@ -1,9 +1,10 @@
 import { useNavigate } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Dialog from "~/components/shared/Dialog";
 import { ChevronDoubleUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import type { ActionArgs } from "@remix-run/cloudflare";
+import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
@@ -35,13 +36,17 @@ export default function LandingTanyaDialog() {
     }, 150);
   };
 
+  const votes = useMemo(() => Math.floor(Math.random() * 100), []);
+
   return (
     <Dialog open={dialogOpen} setOpen={setDialogOpen} onClose={onClose}>
       <div className="w-full">
         <header className="flex items-start justify-between mb-5">
-          <button className="border text-3xl rounded bg-white items-center flex flex-col justify-center px-[18px] py-2 font-semibold leading-140% space-y-[-4px]  ">
+          <button className="relative border text-3xl rounded bg-white items-center flex flex-col justify-center px-[18px] py-2 font-semibold leading-140% space-y-[-4px]">
             <ChevronDoubleUpIcon />
-            <span>{Math.floor(Math.random() * 100)}</span>
+            <span>{votes}</span>
+
+            <CheckBadgeIcon className="absolute w-6 h-6 -bottom-3 fill-emerald-600" />
           </button>
 
           <button onClick={onClose} autoFocus className="w-6 h-6">

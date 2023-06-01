@@ -1,5 +1,7 @@
 import { Link } from "@remix-run/react";
 import IconArrowUp from "../Icons/IconArrowUp";
+import { CheckBadgeIcon } from "@heroicons/react/24/solid";
+import { useMemo } from "react";
 
 export type QuestionListItemProps = {
   id: string | number;
@@ -7,12 +9,16 @@ export type QuestionListItemProps = {
 };
 
 export default function QuestionListItem(props: QuestionListItemProps) {
+  const votes = useMemo(() => props.votes, []);
+
   return (
     <li>
       <article className="flex items-start space-x-4">
-        <button className="border rounded bg-gray-50 items-center flex flex-col justify-center px-5 py-4 font-semibold leading-140% space-y-[-2px] shadow">
+        <button className="border rounded bg-gray-50 items-center flex flex-col justify-center px-5 py-4 font-semibold leading-140% space-y-[-2px] shadow relative">
           <IconArrowUp />
-          <span>{props.votes}</span>
+          <span>{votes}</span>
+
+          <CheckBadgeIcon className="absolute w-5 h-5 -bottom-2.5 fill-emerald-600" />
         </button>
 
         <Link to={`./${props.id}`}>
