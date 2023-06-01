@@ -1,2 +1,8 @@
 compatibility_date = "2022-04-05"
 compatibility_flags = ["streams_enable_constructors"]
+
+[[d1_databases]]
+binding = "DB"
+database_id = "77e26ed0-0b91-4b74-8fdf-396294ff1036"
+database_name = "tanya"
+migrations_dir = "app/db/migrations"

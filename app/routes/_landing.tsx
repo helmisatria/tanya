@@ -53,7 +53,7 @@ export default function Index() {
               onClick={logout}
               className="font-bold text-slate-800 py-2.5 px-3.5 rounded-full border border-slate-400 w-10 h-10 flex items-center justify-center bg-white"
             >
-              H
+              {user.name[0].toUpperCase()}
             </button>
           ) : (
             <Form action="/auth/google" method="post">
