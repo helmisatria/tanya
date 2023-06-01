@@ -9,12 +9,13 @@ export type QuestionListItemProps = {
 };
 
 export default function QuestionListItem(props: QuestionListItemProps) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const votes = useMemo(() => props.votes, []);
 
   return (
     <li>
       <article className="flex items-start space-x-4">
-        <button className="border rounded bg-gray-50 items-center flex flex-col justify-center px-5 py-4 font-semibold leading-140% space-y-[-2px] shadow relative">
+        <button className="border rounded bg-gray-50 items-center flex flex-col justify-center min-w-[60px] py-4 font-semibold leading-140% space-y-[-2px] shadow relative">
           <IconArrowUp />
           <span>{votes}</span>
 

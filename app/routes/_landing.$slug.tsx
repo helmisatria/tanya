@@ -42,8 +42,8 @@ export default function LandingTanyaDialog() {
     <Dialog open={dialogOpen} setOpen={setDialogOpen} onClose={onClose}>
       <div className="w-full">
         <header className="flex items-start justify-between mb-5">
-          <button className="relative border text-3xl rounded bg-white items-center flex flex-col justify-center px-[18px] py-2 font-semibold leading-140% space-y-[-4px]">
-            <ChevronDoubleUpIcon />
+          <button className="relative border text-3xl rounded bg-white items-center flex flex-col justify-center min-w-[64px] py-2 font-semibold leading-140% space-y-[-4px]">
+            <ChevronDoubleUpIcon className="w-6 h-6 text-slate-700" />
             <span>{votes}</span>
 
             <CheckBadgeIcon className="absolute w-6 h-6 -bottom-3 fill-emerald-600" />
