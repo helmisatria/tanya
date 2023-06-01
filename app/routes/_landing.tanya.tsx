@@ -3,16 +3,37 @@ import { useEffect, useState } from "react";
 import Dialog from "~/components/shared/Dialog";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-import type { ActionArgs } from "@remix-run/cloudflare";
+import { redirect, type ActionArgs } from "@remix-run/cloudflare";
 import { cn } from "~/lib/utils";
+import { authenticator } from "~/services/auth.server";
+import { questions } from "~/db/db-schema";
+import { db } from "~/root";
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
+  const user = await authenticator.isAuthenticated(request);
 
-  console.log(formData.get("question"));
+  if (!user) {
+    return redirect("/");
+  }
 
-  // fake loading 1s
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await db
+    .insert(questions)
+    .values({
+      question: formData.get("question") as string,
+      questionerId: user.id,
+    })
+    .returning()
+    .all();
+
+  // const insertedVoters = await db
+  //   .insert(usersVotesQuestions)
+  //   .values({
+  //     questionId: insertQuestions[0].id,
+  //     userId: user.id,
+  //   })
+  //   .returning()
+  //   .all();
 
   return {
     question: formData.get("question"),
@@ -41,9 +62,7 @@ export default function LandingTanyaDialog() {
     <Dialog open={dialogOpen} setOpen={setDialogOpen} onClose={onClose}>
       <div className="w-full">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="leading-140% text-xl font-semibold">
-            Tanya apa aja boleh.
-          </h2>
+          <h2 className="leading-140% text-xl font-semibold">Tanya apa aja boleh.</h2>
 
           <button onClick={onClose} className="w-6 h-6">
             <XMarkIcon />
@@ -63,8 +82,7 @@ export default function LandingTanyaDialog() {
           <button
             className={cn(
               "rounded-md mt-3 bg-slate-100 border border-slate-400 leading-140% px-4 py-2 text-sm font-semibold shadow-sm hover:bg-slate-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-200",
-              navigation.state === "submitting" &&
-                "opacity-50 pointer-events-none"
+              navigation.state === "submitting" && "opacity-50 pointer-events-none"
             )}
           >
             {navigation.state === "submitting" ? "Saving..." : "Submit"}
