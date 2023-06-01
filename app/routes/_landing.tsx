@@ -2,6 +2,7 @@ import type { V2_MetaFunction } from "@remix-run/cloudflare";
 import { useState } from "react";
 import IconLogin from "~/components/Icons/IconLogin";
 import QuestionListItem from "~/components/ListPage/QuestionListItem";
+import { Link, Outlet } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -48,24 +49,31 @@ export default function Index() {
       </header>
 
       <main className="px-6 py-5">
-        <button
+        <Link
+          tabIndex={0}
+          to="./tanya"
           className="border font-semibold border-dashed leading-140% justify-center border-gray-400 shadow-sm rounded-lg py-5 w-full flex items-center"
           style={{
             background:
-              "linear-gradient(180deg, #F9FAFB 50.79%, rgba(249, 250, 251, 0) 100%);",
+              "linear-gradient(180deg, #F9FAFB 50.79%, rgba(249, 250, 251, 0) 100%)",
           }}
         >
           Buat pertanyaan baru
-        </button>
+        </Link>
 
         <ul className="space-y-5 mt-5">
           {Array(10)
             .fill(0)
             .map((_, i) => (
-              <QuestionListItem key={i} />
+              <QuestionListItem
+                key={i}
+                id={i}
+                votes={Math.floor(Math.random() * 100)}
+              />
             ))}
         </ul>
       </main>
+      <Outlet />
     </>
   );
 }

@@ -1,15 +1,21 @@
+import { Link } from "@remix-run/react";
 import IconArrowUp from "../Icons/IconArrowUp";
 
-export default function QuestionListItem() {
+export type QuestionListItemProps = {
+  id: string | number;
+  votes: number;
+};
+
+export default function QuestionListItem(props: QuestionListItemProps) {
   return (
     <li>
-      <article>
-        <a href="##" className="flex items-start space-x-4">
-          <button className="border rounded bg-gray-50 items-center flex flex-col justify-center px-5 py-4 font-semibold leading-140% space-y-[-2px]">
-            <IconArrowUp />
-            <span>18</span>
-          </button>
+      <article className="flex items-start space-x-4">
+        <button className="border rounded bg-gray-50 items-center flex flex-col justify-center px-5 py-4 font-semibold leading-140% space-y-[-2px] shadow">
+          <IconArrowUp />
+          <span>{props.votes}</span>
+        </button>
 
+        <Link to={`./${props.id}`}>
           <div className="flex flex-col">
             <h2 className="font-semibold leading-140% mb-2 line-clamp-1">
               Mas, cara bikin ilustrasi longer text should be truncated
@@ -27,7 +33,7 @@ export default function QuestionListItem() {
               </p>
             </footer>
           </div>
-        </a>
+        </Link>
       </article>
     </li>
   );

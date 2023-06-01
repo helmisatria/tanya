@@ -1,4 +1,8 @@
-import type { LinksFunction } from "@remix-run/cloudflare";
+import {
+  redirect,
+  type LinksFunction,
+  type LoaderArgs,
+} from "@remix-run/cloudflare";
 
 import {
   Links,
@@ -25,6 +29,18 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export async function loader({ request }: LoaderArgs) {
+  // const url = new URL(request.url);
+
+  // const isOnRootPath = url.pathname === "/";
+
+  // if (isOnRootPath) {
+  //   return redirect("/tanya");
+  // }
+
+  return {};
+}
+
 export default function App() {
   return (
     <html lang="id">
@@ -38,7 +54,7 @@ export default function App() {
         <div className="max-w-lg mx-auto shadow min-h-screen bg-slate-50 bg-opacity-10">
           <Outlet />
         </div>
-        <ScrollRestoration />
+        {/* <ScrollRestoration /> */}
         <Scripts />
         <LiveReload />
       </body>
