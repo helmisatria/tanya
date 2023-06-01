@@ -21,7 +21,7 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export async function loader({ request, context }: LoaderArgs) {
+export async function loader({ context }: LoaderArgs) {
   invariant(context.AUTH_GOOGLE_CLIENT_ID, "Missing AUTH_GOOGLE_CLIENT_ID");
   invariant(context.AUTH_GOOGLE_CLIENT_SECRET, "Missing AUTH_GOOGLE_CLIENT_SECRET");
   invariant(context.AUTH_GOOGLE_CALLBACK_URL, "Missing AUTH_GOOGLE_CALLBACK_URL");

@@ -1,5 +1,4 @@
 import type { V2_MetaFunction } from "@remix-run/cloudflare";
-import { useState } from "react";
 import IconLogin from "~/components/Icons/IconLogin";
 import QuestionListItem from "~/components/ListPage/QuestionListItem";
 import { Form, Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
@@ -20,13 +19,20 @@ export const meta: V2_MetaFunction = () => {
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request);
+
+  const questions = new Array(10).fill(0).map((_, i) => ({
+    id: i,
+    votes: Math.floor(Math.random() * 100),
+  }));
+
   return {
     user,
+    questions,
   };
 }
 
 export default function Index() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, questions } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -73,11 +79,9 @@ export default function Index() {
         </Link>
 
         <ul className="space-y-5 mt-5">
-          {Array(10)
-            .fill(0)
-            .map((_, i) => (
-              <QuestionListItem key={i} id={i} votes={Math.floor(Math.random() * 100)} />
-            ))}
+          {questions.map(({ id, votes }, i) => (
+            <QuestionListItem key={i} id={id} votes={votes} />
+          ))}
         </ul>
       </main>
       <Outlet />
