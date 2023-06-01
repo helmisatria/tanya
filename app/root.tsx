@@ -30,6 +30,24 @@ export async function loader({ context }: LoaderArgs) {
   return {};
 }
 
+export function ErrorBoundary(error: any) {
+  console.error(error?.message);
+
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {/* add the UI you want your users to see */}
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
 export default function App() {
   return (
     <html lang="id">

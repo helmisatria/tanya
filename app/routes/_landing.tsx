@@ -38,6 +38,13 @@ export async function loader({ request }: LoaderArgs) {
     return { ...q, votes: totalVotes, voterIds };
   });
 
+  if (allQuestions.length === 0) {
+    return {
+      user,
+      questions: [],
+    };
+  }
+
   const allQuestioners = await db.select().from(users).where(inArray(users.id, allQuestionerIds)).all();
 
   questionsWithVotes = questionsWithVotes.map((q) => {
