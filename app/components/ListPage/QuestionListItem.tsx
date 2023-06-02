@@ -1,10 +1,10 @@
-import { Form, Link, useMatches } from "@remix-run/react";
+import { Form, Link, useFetcher } from "@remix-run/react";
 import IconArrowUp from "../Icons/IconArrowUp";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { useMemo } from "react";
 import { cn, useParentData } from "~/lib/utils";
-import { User } from "~/db/db-schema";
+import type { User } from "~/db/db-schema";
 import dayjs from "dayjs";
+import { parseDate, parseName } from "~/models/helper";
 
 export type QuestionListItemProps = {
   id: string | number;
@@ -28,7 +28,7 @@ export default function QuestionListItem(props: QuestionListItemProps) {
 
   return (
     <li>
-      <article className="flex items-start space-x-4">
+      <article className="flex items-start w-full space-x-4">
         <Form method="POST" action="/?index">
           <input type="hidden" name="question_id" value={props.id} />
           <input type="hidden" name="action" value={actionVoteType} />
@@ -46,7 +46,7 @@ export default function QuestionListItem(props: QuestionListItemProps) {
           </button>
         </Form>
 
-        <Link to={`./${props.id}`}>
+        <Link to={`./${props.id}`} className="w-full">
           <div className="flex flex-col">
             <h2 className="font-semibold leading-140% mb-2 line-clamp-1">{props.question}</h2>
             <p className="text-sm leading-tight">{props.question}</p>
@@ -54,9 +54,9 @@ export default function QuestionListItem(props: QuestionListItemProps) {
             <footer className="mt-3">
               <p className="text-slate-500 text-xs flex items-center">
                 <span className="sr-only">Posted on</span>
-                <time dateTime="2015-05-16 19:00">{dayjs(props.createdAt).format("DD MMMM YYYY HH:mm")}</time>
+                <time dateTime={parseDate(props.createdAt)}>{parseDate(props.createdAt, "DD MMMM YYYY HH:mm")}</time>
                 <span className="w-1 h-1 mx-2 rounded-full bg-slate-200"></span>
-                <span>@{String(props.questioner?.name).toLowerCase().replace(/' '/g, ".")}</span>
+                <span>@{parseName(props.questioner?.name)}</span>
               </p>
             </footer>
           </div>

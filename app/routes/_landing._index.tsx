@@ -40,5 +40,5 @@ export async function action({ request }: ActionArgs) {
       .run();
   }
 
-  return redirect(`/`);
+  return {};
 }

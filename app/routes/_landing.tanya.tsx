@@ -17,27 +17,16 @@ export async function action({ request }: ActionArgs) {
     return redirect("/");
   }
 
-  await db
+  const createdQuestion = await db
     .insert(questions)
     .values({
       question: formData.get("question") as string,
       questionerId: user.id,
     })
     .returning()
-    .all();
+    .get();
 
-  // const insertedVoters = await db
-  //   .insert(usersVotesQuestions)
-  //   .values({
-  //     questionId: insertQuestions[0].id,
-  //     userId: user.id,
-  //   })
-  //   .returning()
-  //   .all();
-
-  return {
-    question: formData.get("question"),
-  };
+  return redirect(`/${createdQuestion.id}`);
 }
 
 export default function LandingTanyaDialog() {
