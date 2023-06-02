@@ -1,6 +1,6 @@
 import { type ActionArgs } from "@remix-run/cloudflare";
 import { useFetcher } from "@remix-run/react";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { useEffect } from "react";
 import { usersVotesQuestions } from "~/db/db-schema";
 import { useSyncUnauthenticatedSubmitQuestion } from "~/hooks/use-sync-submit-question";
@@ -43,7 +43,13 @@ export async function action({ request }: ActionArgs) {
   } else if (action === "DOWN_VOTES") {
     await db
       .delete(usersVotesQuestions)
-      .where(eq(usersVotesQuestions.questionId, Number(questionId)))
+      .where(
+        and(
+          // conditions
+          eq(usersVotesQuestions.questionId, Number(questionId)),
+          eq(usersVotesQuestions.userId, user.id)
+        )
+      )
       .run();
   }
 
