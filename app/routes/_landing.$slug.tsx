@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import Dialog from "~/components/shared/Dialog";
 import { ChevronDoubleUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -12,6 +12,7 @@ import { questions, users, usersVotesQuestions } from "~/db/db-schema";
 import { eq } from "drizzle-orm";
 import { cn, useParentData } from "~/lib/utils";
 import { parseDate, parseName } from "~/models/helper";
+import { useSyncUnauthenticatedSubmitQuestion } from "~/hooks/use-sync-submit-question";
 
 export async function loader({ request, params }: LoaderArgs) {
   const questionId = (params.slug as string).split("-")[0] as string;
@@ -71,11 +72,25 @@ export default function LandingTanyaDialog() {
     }, 150);
   };
 
+  const onVote = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!user) {
+      window.localStorage.setItem(
+        "vote",
+        JSON.stringify({
+          questionId: id,
+          action: actionVoteType,
+        })
+      );
+    }
+
+    return fetcher.submit(e.currentTarget);
+  };
+
   return (
     <Dialog open={dialogOpen} setOpen={setDialogOpen} onClose={onClose}>
       <div className="w-full">
         <header className="flex items-start justify-between mb-5">
-          <fetcher.Form method="post" action="/?index">
+          <fetcher.Form onSubmit={onVote} method="post" action="/?index">
             <input type="hidden" name="question_id" value={id} />
             <input type="hidden" name="action" value={actionVoteType} />
 

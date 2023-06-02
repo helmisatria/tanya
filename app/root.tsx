@@ -1,11 +1,21 @@
 import { type LinksFunction, type LoaderArgs } from "@remix-run/cloudflare";
 
-import { Links, LiveReload, Meta, Outlet, Scripts } from "@remix-run/react";
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  isRouteErrorResponse,
+  useCatch,
+  useRouteError,
+} from "@remix-run/react";
 
 import styles from "./tailwind.css";
 import { registerGoogleStrategy } from "./services/auth.server";
 import { registerDbClient } from "./services/db.server";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
+import { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules";
 
 export let db: DrizzleD1Database;
 
@@ -30,22 +40,47 @@ export async function loader({ context }: LoaderArgs) {
   return {};
 }
 
-export function ErrorBoundary(error: any) {
-  console.error(error?.message);
+const ErrorRoot = ({ children }: { children: React.ReactNode }) => (
+  <html lang="id">
+    <head>
+      <meta charSet="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <Meta />
+      <Links />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"></link>
+    </head>
+    <body>
+      <main className="px-5">{children}</main>
+    </body>
+  </html>
+);
 
-  return (
-    <html>
-      <head>
-        <title>Oh no!</title>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {/* add the UI you want your users to see */}
-        <Scripts />
-      </body>
-    </html>
-  );
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <ErrorRoot>
+        <div>
+          <h1>
+            {error.status} {error.statusText}
+          </h1>
+          <p>{error.data}</p>
+        </div>
+      </ErrorRoot>
+    );
+  } else if (error instanceof Error) {
+    return (
+      <ErrorRoot>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </ErrorRoot>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
 }
 
 export default function App() {

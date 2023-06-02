@@ -1,4 +1,4 @@
-import { Form, Link, useFetcher } from "@remix-run/react";
+import { Form, Link, useFetcher, useSubmit } from "@remix-run/react";
 import IconArrowUp from "../Icons/IconArrowUp";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { cn, useParentData } from "~/lib/utils";
@@ -22,14 +22,29 @@ export type QuestionListItemProps = {
 
 export default function QuestionListItem(props: QuestionListItemProps) {
   const { user } = useParentData("routes/_landing") as { user: User | null };
-
   const isCurrentUserVoted = user ? props.voterIds.includes(user.id) : false;
   const actionVoteType = isCurrentUserVoted ? "DOWN_VOTES" : "UP_VOTES";
+
+  const submit = useSubmit();
+
+  const onVote = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!user) {
+      window.localStorage.setItem(
+        "vote",
+        JSON.stringify({
+          questionId: props.id,
+          action: actionVoteType,
+        })
+      );
+    }
+
+    return submit(e.currentTarget);
+  };
 
   return (
     <li>
       <article className="flex items-start w-full space-x-4">
-        <Form method="POST" action="/?index">
+        <Form onSubmit={onVote} method="post" action="/?index">
           <input type="hidden" name="question_id" value={props.id} />
           <input type="hidden" name="action" value={actionVoteType} />
 

@@ -1,22 +1,23 @@
-import { Form, useNavigate, useNavigation } from "@remix-run/react";
+import { Form, useNavigate, useNavigation, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import Dialog from "~/components/shared/Dialog";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { redirect, type ActionArgs } from "@remix-run/cloudflare";
-import { cn } from "~/lib/utils";
+import { cn, useParentData } from "~/lib/utils";
 import { authenticator } from "~/services/auth.server";
+import type { User } from "~/db/db-schema";
 import { questions } from "~/db/db-schema";
 import { db } from "~/root";
 
 export async function action({ request }: ActionArgs) {
-  const formData = await request.formData();
   const user = await authenticator.isAuthenticated(request);
 
   if (!user) {
-    return redirect("/");
+    return authenticator.authenticate("google", request);
   }
 
+  const formData = await request.formData();
   const createdQuestion = await db
     .insert(questions)
     .values({
@@ -33,6 +34,7 @@ export default function LandingTanyaDialog() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
   const navigation = useNavigation();
+  const { user } = useParentData("routes/_landing") as { user: User | null };
 
   useEffect(() => {
     setTimeout(() => {
@@ -47,6 +49,16 @@ export default function LandingTanyaDialog() {
     }, 150);
   };
 
+  const submit = useSubmit();
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!user) {
+      window.localStorage.setItem("submitted_question", e.currentTarget.question.value);
+    }
+
+    return submit(e.currentTarget);
+  };
+
   return (
     <Dialog open={dialogOpen} setOpen={setDialogOpen} onClose={onClose}>
       <div className="w-full">
@@ -58,7 +70,7 @@ export default function LandingTanyaDialog() {
           </button>
         </div>
 
-        <Form method="POST" className="flex flex-col items-end">
+        <Form onSubmit={onSubmit} method="POST" className="flex flex-col items-end">
           <textarea
             rows={4}
             name="question"

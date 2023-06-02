@@ -1,21 +1,28 @@
-import type { ActionArgs } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
+import { type ActionArgs } from "@remix-run/cloudflare";
+import { useFetcher } from "@remix-run/react";
 import { eq } from "drizzle-orm";
+import { useEffect } from "react";
 import { usersVotesQuestions } from "~/db/db-schema";
+import { useSyncUnauthenticatedSubmitQuestion } from "~/hooks/use-sync-submit-question";
+import { useSyncUnauthenticatedLastVotes } from "~/hooks/use-sync-votes";
 import { db } from "~/root";
 import { authenticator } from "~/services/auth.server";
 
 export default function Index() {
+  useSyncUnauthenticatedLastVotes();
+  useSyncUnauthenticatedSubmitQuestion();
+
   return <></>;
 }
 
 export async function action({ request }: ActionArgs) {
-  const formData = await request.formData();
   const user = await authenticator.isAuthenticated(request);
 
   if (!user) {
-    return redirect("/");
+    return authenticator.authenticate("google", request);
   }
+
+  const formData = await request.formData();
 
   const action = formData.get("action");
   const questionId = formData.get("question_id") as string;
