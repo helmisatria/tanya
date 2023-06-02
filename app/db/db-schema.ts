@@ -5,7 +5,7 @@ export const users = sqliteTable(
   "users",
   {
     id: integer("id").primaryKey(),
-    googleId: text("google_id").notNull(),
+    googleId: text("google_id"),
     email: text("email").notNull(),
     name: text("name").notNull(),
   },

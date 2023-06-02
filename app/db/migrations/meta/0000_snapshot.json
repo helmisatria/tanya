@@ -1,9 +1,63 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "48ba22dd-150d-4bdd-9a19-2c78a10e0b5f",
+  "id": "31244a01-f9bb-4df0-9c28-5de01337b6f8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "questions": {
+      "name": "questions",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "question": {
+          "name": "question",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answer": {
+          "name": "answer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "questioner_id": {
+          "name": "questioner_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
     "users": {
       "name": "users",
       "columns": {
@@ -14,17 +68,23 @@
           "notNull": true,
           "autoincrement": false
         },
+        "google_id": {
+          "name": "google_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {
@@ -34,10 +94,69 @@
             "email"
           ],
           "isUnique": true
+        },
+        "google_id_idx": {
+          "name": "google_id_idx",
+          "columns": [
+            "google_id"
+          ],
+          "isUnique": true
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {}
+    },
+    "users_votes_questions": {
+      "name": "users_votes_questions",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "question_id": {
+          "name": "question_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_votes_questions_user_id_users_id_fk": {
+          "name": "users_votes_questions_user_id_users_id_fk",
+          "tableFrom": "users_votes_questions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ]
+        },
+        "users_votes_questions_question_id_questions_id_fk": {
+          "name": "users_votes_questions_question_id_questions_id_fk",
+          "tableFrom": "users_votes_questions",
+          "tableTo": "questions",
+          "columnsFrom": [
+            "question_id"
+          ],
+          "columnsTo": [
+            "id"
+          ]
+        }
+      },
+      "compositePrimaryKeys": {
+        "users_votes_questions_user_id_question_id_pk": {
+          "columns": [
+            "user_id",
+            "question_id"
+          ]
+        }
+      }
     }
   },
   "enums": {},
