@@ -93,8 +93,8 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Toaster />
         <div className="max-w-lg mx-auto shadow min-h-screen bg-slate-50 bg-opacity-10">
+          <Toaster position="bottom-center" />
           <Outlet />
         </div>
         {/* <ScrollRestoration /> */}
