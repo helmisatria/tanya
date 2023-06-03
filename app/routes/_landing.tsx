@@ -1,13 +1,13 @@
-import { type V2_MetaFunction } from "@remix-run/cloudflare";
+import { type V2_MetaFunction } from "@remix-run/node";
 import IconLogin from "~/components/Icons/IconLogin";
 import QuestionListItem from "~/components/ListPage/QuestionListItem";
 import { Form, Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 
-import type { LoaderArgs } from "@remix-run/cloudflare";
+import type { LoaderArgs } from "@remix-run/node";
 import { authenticator } from "~/services/auth.server";
-import { db } from "~/root";
 import { questions, users, usersVotesQuestions } from "~/db/db-schema";
 import { inArray } from "drizzle-orm";
+import { db } from "~/services/db.server";
 
 export const meta: V2_MetaFunction = () => {
   return [

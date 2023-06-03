@@ -1,17 +1,17 @@
-import { useFetcher, useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import Dialog from "~/components/shared/Dialog";
 import { ChevronDoubleUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import type { LoaderArgs } from "@remix-run/cloudflare";
-import { redirect, json } from "@remix-run/cloudflare";
+import type { LoaderArgs } from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import { db } from "~/root";
 import type { User } from "~/db/db-schema";
 import { questions, users, usersVotesQuestions } from "~/db/db-schema";
 import { eq } from "drizzle-orm";
 import { cn, useParentData } from "~/lib/utils";
 import { parseDate, parseName } from "~/models/helper";
+import { db } from "~/services/db.server";
 
 export async function loader({ request, params }: LoaderArgs) {
   const questionId = (params.slug as string).split("-")[0] as string;

@@ -1,11 +1,11 @@
-import { type ActionArgs } from "@remix-run/cloudflare";
+import { type ActionArgs } from "@remix-run/node";
 import { and, eq } from "drizzle-orm";
 import { usersVotesQuestions } from "~/db/db-schema";
 import { useNotifications } from "~/hooks/use-notifications";
 import { useSyncUnauthenticatedSubmitQuestion } from "~/hooks/use-sync-submit-question";
 import { useSyncUnauthenticatedLastVotes } from "~/hooks/use-sync-votes";
-import { db } from "~/root";
 import { authenticator } from "~/services/auth.server";
+import { db } from "~/services/db.server";
 
 export default function Index() {
   useSyncUnauthenticatedLastVotes();
