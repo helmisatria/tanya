@@ -12,7 +12,6 @@ import { questions, users, usersVotesQuestions } from "~/db/db-schema";
 import { eq } from "drizzle-orm";
 import { cn, useParentData } from "~/lib/utils";
 import { parseDate, parseName } from "~/models/helper";
-import { useSyncUnauthenticatedSubmitQuestion } from "~/hooks/use-sync-submit-question";
 
 export async function loader({ request, params }: LoaderArgs) {
   const questionId = (params.slug as string).split("-")[0] as string;

@@ -1,8 +1,7 @@
 import { type ActionArgs } from "@remix-run/cloudflare";
-import { useFetcher } from "@remix-run/react";
 import { and, eq } from "drizzle-orm";
-import { useEffect } from "react";
 import { usersVotesQuestions } from "~/db/db-schema";
+import { useNotifications } from "~/hooks/use-notifications";
 import { useSyncUnauthenticatedSubmitQuestion } from "~/hooks/use-sync-submit-question";
 import { useSyncUnauthenticatedLastVotes } from "~/hooks/use-sync-votes";
 import { db } from "~/root";
@@ -11,6 +10,7 @@ import { authenticator } from "~/services/auth.server";
 export default function Index() {
   useSyncUnauthenticatedLastVotes();
   useSyncUnauthenticatedSubmitQuestion();
+  useNotifications();
 
   return <></>;
 }

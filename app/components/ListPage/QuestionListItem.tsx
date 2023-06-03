@@ -1,10 +1,11 @@
-import { Form, Link, useFetcher, useSubmit } from "@remix-run/react";
+import { Form, Link, useFetcher, useNavigation, useSubmit } from "@remix-run/react";
 import IconArrowUp from "../Icons/IconArrowUp";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { cn, useParentData } from "~/lib/utils";
 import type { User } from "~/db/db-schema";
 import dayjs from "dayjs";
 import { parseDate, parseName } from "~/models/helper";
+import { useEffect, useTransition } from "react";
 
 export type QuestionListItemProps = {
   id: string | number;

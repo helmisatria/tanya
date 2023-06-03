@@ -9,6 +9,7 @@ import { authenticator } from "~/services/auth.server";
 import type { User } from "~/db/db-schema";
 import { questions } from "~/db/db-schema";
 import { db } from "~/root";
+import { useNotifications } from "~/hooks/use-notifications";
 
 export async function action({ request }: ActionArgs) {
   const user = await authenticator.isAuthenticated(request);
@@ -35,6 +36,8 @@ export default function LandingTanyaDialog() {
   const navigate = useNavigate();
   const navigation = useNavigation();
   const { user } = useParentData("routes/_landing") as { user: User | null };
+
+  useNotifications();
 
   useEffect(() => {
     setTimeout(() => {
@@ -71,6 +74,7 @@ export default function LandingTanyaDialog() {
         </div>
 
         <Form onSubmit={onSubmit} method="POST" className="flex flex-col items-end">
+          <input type="hidden" name="action" value="SUBMIT_QUESTION" />
           <textarea
             rows={4}
             name="question"
