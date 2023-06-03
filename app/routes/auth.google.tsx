@@ -1,5 +1,5 @@
-import type { ActionArgs } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
+import type { ActionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { authenticator } from "~/services/auth.server";
 
 export let loader = () => redirect("/");

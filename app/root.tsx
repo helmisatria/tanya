@@ -1,15 +1,10 @@
-import { type LinksFunction, type LoaderArgs } from "@remix-run/cloudflare";
+import { type LinksFunction, type LoaderArgs } from "@remix-run/node";
 
 import { Links, LiveReload, Meta, Outlet, Scripts, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { Toaster } from "sonner";
 
 import styles from "./tailwind.css";
-import { registerGoogleStrategy } from "./services/auth.server";
-import { registerDbClient } from "./services/db.server";
-import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { useEffect } from "react";
-
-export let db: DrizzleD1Database;
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,10 +21,11 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader({ context }: LoaderArgs) {
-  db = registerDbClient(context);
-  registerGoogleStrategy(context);
-
-  return {};
+  return {
+    ENV: {
+      ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    },
+  };
 }
 
 const ErrorRoot = ({ children }: { children: React.ReactNode }) => {

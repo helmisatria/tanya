@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import Dialog from "~/components/shared/Dialog";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-import { redirect, type ActionArgs } from "@remix-run/cloudflare";
+import { redirect, type ActionArgs } from "@remix-run/node";
 import { cn, useParentData } from "~/lib/utils";
 import { authenticator } from "~/services/auth.server";
 import type { User } from "~/db/db-schema";
 import { questions } from "~/db/db-schema";
-import { db } from "~/root";
 import { useNotifications } from "~/hooks/use-notifications";
+import { db } from "~/services/db.server";
 
 export async function action({ request }: ActionArgs) {
   const user = await authenticator.isAuthenticated(request);

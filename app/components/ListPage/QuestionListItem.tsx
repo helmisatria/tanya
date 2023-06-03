@@ -1,11 +1,9 @@
-import { Form, Link, useFetcher, useNavigation, useSubmit } from "@remix-run/react";
+import { Form, Link, useSubmit } from "@remix-run/react";
 import IconArrowUp from "../Icons/IconArrowUp";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { cn, useParentData } from "~/lib/utils";
 import type { User } from "~/db/db-schema";
-import dayjs from "dayjs";
 import { parseDate, parseName } from "~/models/helper";
-import { useEffect, useTransition } from "react";
 
 export type QuestionListItemProps = {
   id: string | number;
@@ -23,8 +21,12 @@ export type QuestionListItemProps = {
 
 export default function QuestionListItem(props: QuestionListItemProps) {
   const { user } = useParentData("routes/_landing") as { user: User | null };
+  const { ENV } = useParentData("root") as { ENV: { ADMIN_EMAIL: string } };
+
   const isCurrentUserVoted = user ? props.voterIds.includes(user.id) : false;
   const actionVoteType = isCurrentUserVoted ? "DOWN_VOTES" : "UP_VOTES";
+
+  const isAdmin = user?.email === ENV.ADMIN_EMAIL;
 
   const submit = useSubmit();
 
@@ -44,7 +46,7 @@ export default function QuestionListItem(props: QuestionListItemProps) {
 
   return (
     <li>
-      <article className="flex items-start w-full space-x-4">
+      <article className="flex items-stretch w-full space-x-4">
         <Form onSubmit={onVote} method="post" action="/?index">
           <input type="hidden" name="question_id" value={props.id} />
           <input type="hidden" name="action" value={actionVoteType} />
@@ -77,6 +79,19 @@ export default function QuestionListItem(props: QuestionListItemProps) {
             </footer>
           </div>
         </Link>
+
+        {isAdmin && (
+          <div className="flex flex-col border border-red-200">
+            <Form className="h-full" action="/?index" method="post">
+              <input type="hidden" name="action" value="DELETE_QUESTION" />
+              <input type="hidden" name="question_id" value={props.id} />
+
+              <button className="text-xs h-full text-gray-50 px-3 bg-rose-700 font-semibold transition-colors duration-200">
+                Delete
+              </button>
+            </Form>
+          </div>
+        )}
       </article>
     </li>
   );

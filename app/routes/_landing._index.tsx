@@ -1,11 +1,11 @@
-import { type ActionArgs } from "@remix-run/cloudflare";
+import { type ActionArgs } from "@remix-run/node";
 import { and, eq } from "drizzle-orm";
-import { usersVotesQuestions } from "~/db/db-schema";
+import { questions, usersVotesQuestions } from "~/db/db-schema";
 import { useNotifications } from "~/hooks/use-notifications";
 import { useSyncUnauthenticatedSubmitQuestion } from "~/hooks/use-sync-submit-question";
 import { useSyncUnauthenticatedLastVotes } from "~/hooks/use-sync-votes";
-import { db } from "~/root";
 import { authenticator } from "~/services/auth.server";
+import { db } from "~/services/db.server";
 
 export default function Index() {
   useSyncUnauthenticatedLastVotes();
@@ -50,6 +50,20 @@ export async function action({ request }: ActionArgs) {
           eq(usersVotesQuestions.userId, user.id)
         )
       )
+      .run();
+  } else if (action === "DELETE_QUESTION") {
+    const isAdmin = process.env.ADMIN_EMAIL === user.email;
+
+    if (!isAdmin) return {};
+
+    await db
+      .delete(usersVotesQuestions)
+      .where(eq(usersVotesQuestions.questionId, Number(questionId)))
+      .run();
+
+    await db
+      .delete(questions)
+      .where(eq(questions.id, Number(questionId)))
       .run();
   }
 
