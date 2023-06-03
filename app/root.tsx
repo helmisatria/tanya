@@ -21,7 +21,11 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader({ context }: LoaderArgs) {
-  return {};
+  return {
+    ENV: {
+      ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    },
+  };
 }
 
 const ErrorRoot = ({ children }: { children: React.ReactNode }) => {

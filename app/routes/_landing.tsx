@@ -5,9 +5,8 @@ import { Form, Link, Outlet, useLoaderData, useNavigate } from "@remix-run/react
 
 import type { LoaderArgs } from "@remix-run/node";
 import { authenticator } from "~/services/auth.server";
-import { questions, users, usersVotesQuestions } from "~/db/db-schema";
-import { inArray } from "drizzle-orm";
-import { db } from "~/services/db.server";
+import { getAllQuestions } from "~/models/questions";
+import { useEventSource } from "remix-utils";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -23,49 +22,24 @@ export const meta: V2_MetaFunction = () => {
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request);
 
-  const promiseAllQuestions = db.select().from(questions).all();
-  const promiseAllQuestionsVoted = db.select().from(usersVotesQuestions).all();
-
-  const [allQuestions, allQuestionsVoted] = await Promise.all([promiseAllQuestions, promiseAllQuestionsVoted]);
-
-  const allQuestionerIds: number[] = [];
-  let questionsWithVotes = allQuestions.map((q) => {
-    const votes = allQuestionsVoted.filter((qv) => qv.questionId === q.id);
-    const totalVotes = votes.length;
-    const voterIds = votes.map((v) => v.userId);
-    allQuestionerIds.push(q.questionerId);
-
-    return { ...q, votes: totalVotes, voterIds };
-  });
-
-  if (allQuestions.length === 0) {
-    return {
-      user,
-      questions: [],
-    };
-  }
-
-  const allQuestioners = await db.select().from(users).where(inArray(users.id, allQuestionerIds)).all();
-
-  questionsWithVotes = questionsWithVotes.map((q) => {
-    const questioner = allQuestioners.find((user) => user.id === q.questionerId);
-
-    return { ...q, questioner };
-  });
+  const questionsWithVotes = await getAllQuestions();
 
   return {
     user,
-    questions: questionsWithVotes,
+    questions: JSON.stringify(questionsWithVotes),
   };
 }
 
 export default function Index() {
-  const { user, questions } = useLoaderData<typeof loader>();
+  const { user, questions: loaderQuestions } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
   const logout = async () => {
     navigate("/auth/logout");
   };
+
+  let questionsString = useEventSource("/sse/questions", { event: "questions" }) ?? loaderQuestions;
+  const questions = JSON.parse(questionsString) as Awaited<ReturnType<typeof getAllQuestions>>;
 
   return (
     <>
