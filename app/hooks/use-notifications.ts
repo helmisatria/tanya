@@ -1,11 +1,20 @@
-import { useNavigation } from "@remix-run/react";
+import { useActionData, useNavigation } from "@remix-run/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
 export const useNotifications = () => {
   const navigation = useNavigation();
+  const actionData = useActionData();
 
   useEffect(() => {
+    if (actionData?.error) {
+      toast.error(actionData.message);
+    }
+  }, [actionData]);
+
+  useEffect(() => {
+    if (actionData?.error) return;
+
     if (navigation.state === "loading") {
       const data = navigation.formData;
       const action = data?.get("action");
@@ -24,5 +33,5 @@ export const useNotifications = () => {
           break;
       }
     }
-  }, [navigation]);
+  }, [navigation, actionData]);
 };

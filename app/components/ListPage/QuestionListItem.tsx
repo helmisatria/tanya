@@ -44,6 +44,16 @@ export default function QuestionListItem(props: QuestionListItemProps) {
     return submit(e.currentTarget);
   };
 
+  const onSubmitDeleteQuestion = async (e: React.FormEvent<HTMLFormElement>) => {
+    const confirmed = window.confirm("Are you sure want to delete this question?");
+
+    if (!confirmed) {
+      return e.preventDefault();
+    }
+
+    return submit(e.currentTarget);
+  };
+
   return (
     <li>
       <article className="flex items-stretch w-full space-x-4">
@@ -82,7 +92,7 @@ export default function QuestionListItem(props: QuestionListItemProps) {
 
         {isAdmin && (
           <div className="flex flex-col border border-red-200">
-            <Form className="h-full" action="/?index" method="post">
+            <Form onSubmit={onSubmitDeleteQuestion} className="h-full" action="/?index" method="post">
               <input type="hidden" name="action" value="DELETE_QUESTION" />
               <input type="hidden" name="question_id" value={props.id} />
 

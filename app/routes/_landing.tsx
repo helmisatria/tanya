@@ -8,6 +8,8 @@ import { authenticator } from "~/services/auth.server";
 import { getAllQuestions } from "~/models/questions";
 import { useEventSource } from "remix-utils";
 
+import { useTransition, animated } from "@react-spring/web";
+
 export const meta: V2_MetaFunction = () => {
   return [
     { title: "Tanya | Helmisatria.com" },
@@ -40,6 +42,18 @@ export default function Index() {
 
   let questionsString = useEventSource("/sse/questions", { event: "questions" }) ?? loaderQuestions;
   const questions = JSON.parse(questionsString) as Awaited<ReturnType<typeof getAllQuestions>>;
+
+  const height = 100;
+  const transitions = useTransition(
+    questions.map((data, i) => ({ ...data, y: i * height })),
+    {
+      from: { position: "absolute", opacity: 0 },
+      leave: { height: 0, opacity: 0 },
+      enter: ({ y }) => ({ y, opacity: 1 }),
+      update: ({ y }) => ({ y }),
+      key: (item: { id: any }) => item?.id,
+    }
+  );
 
   return (
     <>
@@ -80,10 +94,18 @@ export default function Index() {
           Buat pertanyaan baru
         </Link>
 
-        <ul className="space-y-5 mt-5">
-          {questions.map((question, i) => (
-            <QuestionListItem key={i} {...question} />
-          ))}
+        <ul className="mt-5">
+          {/* @ts-ignore */}
+          {transitions(({ y, ...style }, item, { key }) => {
+            return (
+              <animated.div
+                key={key}
+                style={{ transform: y.to((y: any) => `translate3d(0,${y}px,0)`), ...style } as any}
+              >
+                <QuestionListItem {...item} />
+              </animated.div>
+            );
+          })}
         </ul>
       </main>
       <Outlet />

@@ -3,19 +3,34 @@ import { useEffect, useState } from "react";
 import Dialog from "~/components/shared/Dialog";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-import { redirect, type ActionArgs } from "@remix-run/node";
+import { redirect, json, type ActionArgs } from "@remix-run/node";
 import { cn, useParentData } from "~/lib/utils";
 import { authenticator } from "~/services/auth.server";
 import type { User } from "~/db/db-schema";
 import { questions } from "~/db/db-schema";
 import { useNotifications } from "~/hooks/use-notifications";
 import { db } from "~/services/db.server";
+import { eq } from "drizzle-orm";
 
 export async function action({ request }: ActionArgs) {
   const user = await authenticator.isAuthenticated(request);
 
   if (!user) {
     return authenticator.authenticate("google", request);
+  }
+
+  const allSubmittedQuestion = (await db.select().from(questions).where(eq(questions.questionerId, user.id)).all())
+    .length;
+
+  if (allSubmittedQuestion > 5) {
+    return json(
+      {
+        error: true,
+        status: 400,
+        message: "Maaf, maksimal tanya 5x yaa. Bisa bilang @helmisatria aja kalo mau tanya lebih banyak",
+      },
+      { status: 400 }
+    );
   }
 
   const formData = await request.formData();

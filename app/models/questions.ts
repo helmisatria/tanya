@@ -24,11 +24,13 @@ export const getAllQuestions = async () => {
 
   const allQuestioners = await db.select().from(users).where(inArray(users.id, allQuestionerIds)).all();
 
-  questionsWithVotes = questionsWithVotes.map((q) => {
-    const questioner = allQuestioners.find((user) => user.id === q.questionerId);
+  questionsWithVotes = questionsWithVotes
+    .map((q) => {
+      const questioner = allQuestioners.find((user) => user.id === q.questionerId);
 
-    return { ...q, questioner };
-  });
+      return { ...q, questioner };
+    })
+    .sort((a, b) => b.votes - a.votes);
 
   return questionsWithVotes;
 };
