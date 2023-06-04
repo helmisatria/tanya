@@ -47,7 +47,7 @@ export default function Index() {
   const transitions = useTransition(
     questions.map((data, i) => ({ ...data, y: i * height })),
     {
-      from: { position: "absolute", opacity: 0 },
+      from: { position: "absolute", opacity: 1 },
       leave: { height: 0, opacity: 0 },
       enter: ({ y }) => ({ y, opacity: 1 }),
       update: ({ y }) => ({ y }),
@@ -95,13 +95,9 @@ export default function Index() {
         </Link>
 
         <ul className="mt-5">
-          {/* @ts-ignore */}
           {transitions(({ y, ...style }, item, { key }) => {
             return (
-              <animated.div
-                key={key}
-                style={{ transform: y.to((y: any) => `translate3d(0,${y}px,0)`), ...style } as any}
-              >
+              <animated.div key={key} style={{ transform: y.to((y) => `translate3d(0,${y}px,0)`), ...style } as any}>
                 <QuestionListItem {...item} />
               </animated.div>
             );
