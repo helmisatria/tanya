@@ -95,9 +95,13 @@ export default function Index() {
         </Link>
 
         <ul className="mt-5">
+          {/* @ts-ignore */}
           {transitions(({ y, ...style }, item, { key }) => {
             return (
-              <animated.div key={key} style={{ transform: y.to((y) => `translate3d(0,${y}px,0)`), ...style } as any}>
+              <animated.div
+                key={key}
+                style={{ transform: y.to((y: any) => `translate3d(0,${y}px,0)`), ...style } as any}
+              >
                 <QuestionListItem {...item} />
               </animated.div>
             );
