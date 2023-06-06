@@ -32,7 +32,6 @@ COPY --link . .
 
 # Build application
 RUN pnpm run build
-RUN npx dotenv -- pnpm run db:migrate
 
 # Remove development dependencies
 RUN pnpm prune --prod
@@ -45,4 +44,7 @@ COPY --from=build /app /app
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD ["pnpm", "run", "start"]
+# Run migration script before starting the server
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+CMD ["/app/start.sh"]
