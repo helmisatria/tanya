@@ -32,7 +32,7 @@ COPY --link . .
 
 # Build application
 RUN pnpm run build
-RUN if [ -f .env.production ]; then npx dotenv -e .env.production -- pnpm run db:migrate; else pnpm run db:migrate; fi
+RUN if [ -f .env.production ]; then npx dotenv -e .env.production -- pnpm run db:migrate; else npx dotenv -- pnpm run db:migrate; fi
 
 # Remove development dependencies
 RUN pnpm prune --prod
