@@ -43,7 +43,7 @@ export default function Index() {
   let questionsString = useEventSource("/sse/questions", { event: "questions" }) ?? loaderQuestions;
   const questions = JSON.parse(questionsString) as Awaited<ReturnType<typeof getAllQuestions>>;
 
-  const height = 100;
+  const height = 110;
   const transitions = useTransition(
     questions.map((data, i) => ({ ...data, y: i * height })),
     {
@@ -52,6 +52,7 @@ export default function Index() {
       enter: ({ y }) => ({ y, opacity: 1 }),
       update: ({ y }) => ({ y }),
       key: (item: { id: any }) => item?.id,
+      config: { tension: 220, friction: 26 },
     }
   );
 
@@ -94,13 +95,14 @@ export default function Index() {
           Buat pertanyaan baru
         </Link>
 
-        <ul className="mt-5">
+        <ul className="mt-5 relative">
           {/* @ts-ignore */}
           {transitions(({ y, ...style }, item, { key }) => {
             return (
               <animated.div
                 key={key}
                 style={{ transform: y.to((y: any) => `translate3d(0,${y}px,0)`), ...style } as any}
+                className="w-full max-w-full"
               >
                 <QuestionListItem {...item} />
               </animated.div>

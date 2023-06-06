@@ -102,7 +102,7 @@ export default function LandingTanyaDialog() {
               <ChevronDoubleUpIcon className="w-6 h-6 text-slate-700" />
               <span>{votes}</span>
 
-              <CheckBadgeIcon className="absolute w-6 h-6 -bottom-3 fill-emerald-600" />
+              <CheckBadgeIcon className="absolute w-6 h-6 -bottom-3 fill-emerald-600 bg-white rounded-full" />
             </button>
           </fetcher.Form>
 
@@ -118,7 +118,7 @@ export default function LandingTanyaDialog() {
             <span className="w-1 h-1 mx-2 rounded-full bg-slate-200"></span>
             <span>@{parseName(voter.name)}</span>
           </p>
-          <h2 className="mt-1 text-lg max-w-[14rem] leading-140% font-semibold">{question}</h2>
+          {/* <h2 className="mt-1 text-lg max-w-[14rem] leading-140% font-semibold">{question}</h2> */}
 
           <p className="mt-4 text-slate-800">{question}</p>
         </div>

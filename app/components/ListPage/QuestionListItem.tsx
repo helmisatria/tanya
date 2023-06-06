@@ -56,7 +56,7 @@ export default function QuestionListItem(props: QuestionListItemProps) {
 
   return (
     <li>
-      <article className="flex items-stretch w-full space-x-4">
+      <article className="flex items-stretch w-full space-x-4 min-h-[5.625rem]">
         <Form onSubmit={onVote} method="post" action="/?index">
           <input type="hidden" name="question_id" value={props.id} />
           <input type="hidden" name="action" value={actionVoteType} />
@@ -75,9 +75,11 @@ export default function QuestionListItem(props: QuestionListItemProps) {
         </Form>
 
         <Link to={`./${props.id}`} className="w-full">
-          <div className="flex flex-col">
-            <h2 className="font-semibold leading-140% mb-2 line-clamp-1">{props.question}</h2>
-            <p className="text-sm leading-tight">{props.question}</p>
+          <div className="flex flex-col h-full justify-between">
+            <div>
+              <h2 className="font-semibold leading-140% mb-2 line-clamp-1 max-w-[12.5rem]">{props.question}</h2>
+              <p className="text-sm leading-tight line-clamp-2">{props.question}</p>
+            </div>
 
             <footer className="mt-3">
               <p className="text-slate-500 text-xs flex items-center">
