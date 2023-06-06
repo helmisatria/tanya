@@ -37,7 +37,6 @@ RUN if [ -f .env.production ]; then npx dotenv -e .env.production -- pnpm run db
 # Remove development dependencies
 RUN pnpm prune --prod
 
-
 # Final stage for app image
 FROM base
 

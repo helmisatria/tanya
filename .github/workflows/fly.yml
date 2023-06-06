@@ -7,11 +7,12 @@ jobs:
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      TURSO_DB_TOKEN: ${{ secrets.TURSO_DB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          TURSO_DB_TOKEN: ${{ secrets.TURSO_DB_TOKEN }}
