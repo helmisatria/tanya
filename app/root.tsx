@@ -37,6 +37,19 @@ const ErrorRoot = ({ children }: { children: React.ReactNode }) => {
         <Meta />
         <Links />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"></link>
+        {/* <!-- Google tag (gtag.js) --> */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GJGZSP9SR3"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-GJGZSP9SR3');
+            `,
+          }}
+        ></script>
       </head>
       <body>
         <main className="px-5">{children}</main>
@@ -89,6 +102,19 @@ export default function App() {
         <script src="https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2/web-animations.min.js"></script>
         <Meta />
         <Links />
+        {/* <!-- Google tag (gtag.js) --> */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GJGZSP9SR3"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-GJGZSP9SR3');
+            `,
+          }}
+        ></script>
       </head>
       <body>
         <div className="max-w-lg mx-auto shadow min-h-screen bg-slate-50 bg-opacity-10">
